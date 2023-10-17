@@ -56,7 +56,6 @@ class Bird:
         self.rct = self.img.get_rect()
         self.rct.center = xy
 
-
     def change_img(self, num: int, screen: pg.Surface):
         """
         こうかとん画像を切り替え，画面に転送する
@@ -83,8 +82,6 @@ class Bird:
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.img = self.imgs[tuple(sum_mv)]
         screen.blit(self.img, self.rct) 
-
-
 
 class Beam:
     def __init__(self, bird):
@@ -128,11 +125,11 @@ class Explosion:
             else:
                 self.image = self.images[self.index]
 
+
 class Bomb:
     """
     爆弾に関するクラス
     """
-
     colors = [(255,0,0),(0,255,0),(0,0,255),(255,0,255),(255,255,0)]
     directions = [-5, +5]
 
@@ -175,7 +172,6 @@ class score:
         screen.blit(self.img, [100, 100])
 
 
-
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -185,9 +181,9 @@ def main():
     beam = None
     y_score = score()
     score_num = 0
-
     clock = pg.time.Clock()
     tmr = 0
+    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
