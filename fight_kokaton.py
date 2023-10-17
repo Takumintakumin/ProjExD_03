@@ -107,6 +107,27 @@ class Beam:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+
+class Explosion:
+    def __init__(self, bomb):
+        self.images = ("ex03/fig/explosion.gif")
+        self.index = 0  # 現在の爆発フレームのインデックス
+        self.image = self.images[self.index]
+        self.rct = self.image.get_rect()
+        self.rct.center = bomb.rct.center
+        self.frame_delay = 3  # フレームを切り替える遅延時間
+
+    def update(self):
+        self.frame_counter += 1
+        if self.frame_counter >= self.frame_delay:
+            self.frame_counter = 0
+            self.index += 1
+            if self.index >= len(self.images):
+                # 爆発アニメーションが終了したら、自身を削除
+                self.kill()
+            else:
+                self.image = self.images[self.index]
+
 class Bomb:
     """
     爆弾に関するクラス
@@ -143,13 +164,27 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class score:
+    def __init__(self):
+        self.font = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体" , 50)
+        self.color = (0, 0, 255)
+        self.score_num = 0
+
+    def update(self, num, screen):
+        self.img = self.font.render("score:"+ str(num), 0, (0, 0, 255))
+        screen.blit(self.img, [100, 100])
+
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("ex03/fig/pg_bg.jpg")
     bird = Bird(3, (900, 400))
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]
-    beam = None 
+    beam = None
+    y_score = score()
+    score_num = 0
 
     clock = pg.time.Clock()
     tmr = 0
@@ -176,6 +211,7 @@ def main():
                 if beam.rct.colliderect(bomb.rct):
                     beam = None
                     bombs[i] = None
+                    score_num += 1
                     bird.change_img(6, screen)
                     pg.display.update()
                     
@@ -187,6 +223,7 @@ def main():
             bomb.update(screen)
         if beam is not None:
             beam.update(screen)
+        y_score.update(score_num, screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
